@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "afc"
+version = "0.1.2"
+description = "Mech Library for MechBattles"
+authors =["Ric Pruss <no@email.com>", "Ken Macken <no@email.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<=3.11"
+ultralytics = "^8.0.20"
+roboflow = "^0.2.29"
+torch = "^1.13.1"
+torchvision = "^0.14.1"
+protobuf = "<4.0.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+albumentations = "^1.3.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+mechbattle = "mechlib.mechbattle:start"
+

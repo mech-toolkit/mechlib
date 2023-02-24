@@ -1,5 +1,9 @@
-from afc.image import get_bot_img, save_image
-from afc.utils import add_heading, get_exponential_moving_average, get_gaussian_intersect
+from mechlib.image import get_bot_img, save_image
+from mechlib.utils import (
+    add_heading,
+    get_exponential_moving_average,
+    get_gaussian_intersect,
+)
 import numpy as np
 import random
 
@@ -9,6 +13,7 @@ def we_punch(value):
         return 2
     else:
         return 0
+
 
 def process_bot_image(bot, model, motor):
     bot_image = get_bot_img(bot.addr[0])
@@ -26,8 +31,9 @@ def process_bot_image(bot, model, motor):
     if False:
         save_image(bot_image)
     #
-    print(f"Mechs found: {len(results[0])}")
-    if len(results[0]):
+    found = len(results[0])
+    print(f"Mechs found: {found}")
+    if found >= 1:
         for result in results:
             divisions = 6
             x = int(result.boxes.xyxy[0][0])
@@ -59,14 +65,14 @@ def process_bot_image(bot, model, motor):
         # Didn't see anything so....
         # Let's look where we last saw it
         result = get_exponential_moving_average(bot.headings, 0.95)
-        print(f'Where to look using past data: {result}')
-        if (result > 240):
+        print(f"Where to look using past data: {result}")
+        if result > 240:
             # Turn Right
             return "90,83,0,RFC"
-        elif (result < 240):
+        elif result < 240:
             # Turn Left
             return "83,90,0,RFC"
         else:
-            # Reverse    
+            # Reverse
             commands = ["80,100,0,RFC"]
-            return(commands[random.randint(0, len(commands)-1)])
+            return commands[random.randint(0, len(commands) - 1)]

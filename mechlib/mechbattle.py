@@ -1,10 +1,12 @@
 from ultralytics import YOLO
 import time
-from afc.network import lan_server, receive_udp, send_response, end_fight
-from afc import MechsList
-from afc.motor import Motor
-from afc.strategy import process_bot_image
+from mechlib.network import lan_server, receive_udp, send_response, end_fight
+from mechlib import MechsList
+from mechlib.motor import Motor
+from mechlib.strategy import process_bot_image
 import argparse
+from pathlib import Path
+import urllib.request
 
 
 def motor_settings() -> Motor:
@@ -23,6 +25,16 @@ def motor_settings() -> Motor:
 
 
 def main(args):
+    print("checking if model exists")
+    if not Path(args.model).exists():
+        if args.model == "yv8n_GC_20230205_1123.pt":
+            print("Auto Downloading Default Model")
+            url = "https://github.com/mech-toolkit/pretrained/releases/download/v0.0.1/yv8n_GC_20230205_1123.pt"
+            urllib.request.urlretrieve(url, args.model)
+        else:
+            print("Model not found")
+            return
+
     print("Loading model")
     model = YOLO(args.model)  # load a pmodel
     print("Model loaded")
@@ -77,9 +89,7 @@ def main(args):
                         if Mech.received_response:
                             #
                             # perform inference here and return a motion command
-                            cmd = process_bot_image(
-                                Mech, model=model, motor=motor
-                            )
+                            cmd = process_bot_image(Mech, model=model, motor=motor)
                             #
                             # this is where you send the motion command
                             print(f"Sending: {cmd} to {Mech.name} @ {addr}")

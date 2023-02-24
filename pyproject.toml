@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "afc"
-version = "0.1.2"
+name = "mechlib"
+version = "0.1.0"
 description = "Mech Library for MechBattles"
-authors =["Ric Pruss <no@email.com>", "Ken Macken <no@email.com>"]
+authors =["Ric Pruss <ricpruss@gmail.com>", "Ken Macken <kenmacken@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]

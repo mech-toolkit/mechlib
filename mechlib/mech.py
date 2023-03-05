@@ -9,7 +9,7 @@ class Mech:
     addr: tuple[str, int]
     received_response: bool = True
     timestamp: float = time.time()
-    headings: deque =  deque([], maxlen=5)
+    headings: deque =  deque([], maxlen=10)
 
 
 class MechsList:

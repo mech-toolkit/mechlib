@@ -63,15 +63,16 @@ def process_bot_image(bot, model, motor):
             # print(f'Bounding Box Coords xyxy:{result.boxes.xyxy[0]}')   # box with xyxy format, (N, 4)
     else:
         # Didn't see anything so....
+        add_heading(240, bot.headings)
         # Let's look where we last saw it
-        result = get_exponential_moving_average(bot.headings, 0.95)
+        result = get_exponential_moving_average(bot.headings, 0.5)
         print(f"Where to look using past data: {result}")
         if result > 240:
-            # Turn Right
-            return "90,83,0,RFC"
+            # Turn Right - #Left: 90+ = FWD,Right: 90+ = REV
+            return "90,96,0,RFC" 
         elif result < 240:
-            # Turn Left
-            return "83,90,0,RFC"
+            # Turn Left - #Left: 90+ = FWD,Right: 90+ = REV
+            return "90,85,0,RFC"
         else:
             # Reverse
             commands = ["80,100,0,RFC"]

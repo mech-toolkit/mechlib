@@ -22,7 +22,7 @@ def motor_settings() -> Motor:
         offset_right=0,  # 2
         center_pos=90,  # Continuous Servo Centre Pos
         max_speed=15,  # This is the max offset from the motor_center_pos (35 is maximum on the FS90R Servos)
-        turn_rate=240,  # this controls the turn rate - higher equals slower
+        turn_rate=220,  # this controls the turn rate - higher equals slower
         slope_width=30,
     )
     return motor
@@ -76,6 +76,7 @@ def main(args):
                 print("FIGHT!")
                 print(".......")
                 while True:
+                    start_time = time.time()  # get the current time
                     data, addr = receive_udp(sock)
                     if addr:
                         Mech = Mechs_list.get_Mech(addr)
@@ -85,9 +86,7 @@ def main(args):
                             print(f"Error: {addr} not found in Mechs_list")
                             continue
                         else:
-                            print(
-                                f"Received: {data.decode()} from {Mech.name} @ {addr}"
-                            )
+                            print(f"Received: {data.decode()} from {Mech.name} @ {addr}")
                         if data == b"ack":
                             Mech.received_response = True
                         if Mech.received_response:
@@ -100,7 +99,11 @@ def main(args):
                             #cmd = "90,90,0,RFC" #Left: 90+ = FWD,Right: 90+ = REV ,Action, ACK = 
                             send_response(sock, addr, cmd)
                             Mech.received_response = False
-                    time.sleep(0.1)
+                    time.sleep(0.01)
+                    end_time = time.time()  # get the current time again
+                    elapsed_time = end_time - start_time
+                    print(f"Total Elapsed time to process: {elapsed_time} seconds")
+                    print("\n")
             else:
                 print(".......")
                 print(

@@ -1,3 +1,7 @@
+print("Initializing attack protocols...")
+print("Syncing targeting systems...")
+print("Weapons systems priming, please be patient...")
+print("(loading..)")
 from ultralytics import YOLO
 import time
 from mechlib.network import lan_server, receive_udp, send_response, end_fight
@@ -11,14 +15,14 @@ import urllib.request
 
 def motor_settings() -> Motor:
     motor = Motor(
-        speed=39,  # 1 - 100
+        speed=99,  # 1 - 100
         img_width_min=0,
         img_width_max=480,  # Image width
         offset_left=0,  # -6
         offset_right=0,  # 2
         center_pos=90,  # Continuous Servo Centre Pos
-        max_speed=35,  # This is the max offset from the motor_center_pos
-        turn_rate=180,  # this controls the turn rate - higher equals slower
+        max_speed=15,  # This is the max offset from the motor_center_pos (35 is maximum on the FS90R Servos)
+        turn_rate=240,  # this controls the turn rate - higher equals slower
         slope_width=30,
     )
     return motor
@@ -35,7 +39,7 @@ def main(args):
             print("Model not found")
             return
 
-    print("Loading model")
+    print("Loading model...")
     model = YOLO(args.model)  # load a pmodel
     print("Model loaded")
     #
@@ -49,7 +53,7 @@ def main(args):
 
     try:
         while True:
-            # create an instance of the MechsList class
+            # create an instanc1e of the MechsList class
             Mechs_list = MechsList()
             print(f"Waiting for {fighters_needed_min} fighters to agree to fight!")
             for i in range(countdown, 0, -1):
@@ -93,6 +97,7 @@ def main(args):
                             #
                             # this is where you send the motion command
                             print(f"Sending: {cmd} to {Mech.name} @ {addr}")
+                            #cmd = "90,90,0,RFC" #Left: 90+ = FWD,Right: 90+ = REV ,Action, ACK = 
                             send_response(sock, addr, cmd)
                             Mech.received_response = False
                     time.sleep(0.1)
@@ -120,7 +125,7 @@ def main(args):
 def start():
     parser = argparse.ArgumentParser(description="Example Mech Strategy Server")
     parser.add_argument(
-        "-n", "--number", type=str, help="Number of Fighters expected.", default=0
+        "-n", "--number", type=str, help="Number of MECHs you are going to control.", default=0
     )
     parser.add_argument(
         "-m",
@@ -133,7 +138,7 @@ def start():
     args = parser.parse_args()
 
     if args.number == 0:
-        args.number = input("Number of Robots (can be set e.g. -n 2)? ")
+        args.number = input("Number of MECHs you are going to control (can be set e.g. -n 2)? ")
 
     main(args)
 
